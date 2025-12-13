@@ -26,7 +26,7 @@ public class FcmTokenService {
 
     @Transactional
     public FcmTokenResponse registerToken(FcmTokenRequest request) {
-        log.info("Enregistrement du token FCM: {}", request.token().substring(0, 20) + "...");
+        log.info("Enregistrement du token FCM: {}", request.token());
 
         Optional<FcmTokenEntity> existingToken = fcmTokenRepository.findByToken(request.token());
         FcmTokenEntity fcmToken;

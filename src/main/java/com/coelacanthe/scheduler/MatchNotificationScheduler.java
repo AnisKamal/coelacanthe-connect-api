@@ -29,9 +29,9 @@ public class MatchNotificationScheduler {
     /**
      * Vérifier toutes les minutes s'il y a des notifications à envoyer
      */
-    @Scheduled(cron = "0 * * * * *") // Toutes les minutes
+    //@Scheduled(cron = "0 * * * * *") // Toutes les minutes
     public void checkAndSendNotifications() {
-        System.out.println("========== SCHEDULER EXECUTE ==========");
+
         log.info("Vérification des notifications à envoyer...");
 
         sendPreMatchNotifications();
