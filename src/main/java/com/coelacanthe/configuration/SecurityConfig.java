@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/notification/**").permitAll()
                         .requestMatchers("/api/v1/lieu-diffusion/**").permitAll()
+                        .requestMatchers("/api/v1/match/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
