@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coelacanthe-connect
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+google:
+  client-id: 1008922557590-cbshprfj91ada5dbsj4osjingigmcvvq.apps.googleusercontent.com
+
+jwt:
+  secret: votre_secret_key_minimum_256_bits_pour_hs256_algorithm
+  expiration: 86400000 # 24 heures en millisecondes
+
+#logging:
+#  pattern: 
+#    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+#  level:
+#    root: INFO
+#    com.coelacanthe: DEBUG
+#    org:
+#      springframework:
+#        security: TRACE
+#        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
+#        type.descriptor.sql.BasicBinder: TRACE
+
