@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/notification/**").permitAll()
+                        .requestMatchers("/api/v1/lieu-diffusion/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
