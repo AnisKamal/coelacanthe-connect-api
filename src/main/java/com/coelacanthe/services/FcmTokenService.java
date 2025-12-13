@@ -51,7 +51,7 @@ public class FcmTokenService {
      */
 
     public void deactivateToken(String token) {
-        log.info("Désactivation du token: {}", token.substring(0, 20) + "...");
+        log.info("Désactivation du token: {}", token + "...");
         int updated = fcmTokenRepository.deactivateToken(token);
         if(updated == 0) {
             log.info("Token non présent");
