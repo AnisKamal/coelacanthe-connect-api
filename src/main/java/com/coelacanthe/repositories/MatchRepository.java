@@ -19,4 +19,6 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 
     List<MatchEntity> findByMatchDate(LocalDateTime matchDate);
 
+    List<MatchEntity> findAllByMatchDateBetween(LocalDateTime start, LocalDateTime end);
+
 }

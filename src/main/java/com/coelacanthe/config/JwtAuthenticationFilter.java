@@ -1,4 +1,4 @@
-package com.coelacanthe.configuration;
+package com.coelacanthe.config;
 
 import com.coelacanthe.entities.UserEntity;
 import com.coelacanthe.repositories.UserRepository;

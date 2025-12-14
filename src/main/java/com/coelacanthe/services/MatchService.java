@@ -3,10 +3,11 @@ package com.coelacanthe.services;
 import com.coelacanthe.dto.MatchRequest;
 import com.coelacanthe.dto.MatchResponse;
 import com.coelacanthe.entities.MatchEntity;
+import com.coelacanthe.events.MatchRegisteredEvent;
 import com.coelacanthe.repositories.MatchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class MatchService {
 
     private final MatchRepository matchRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public MatchResponse registerMatch(MatchRequest matchRequest) {
@@ -51,6 +53,9 @@ public class MatchService {
         match.setExternalMatchId(matchRequest.externalId());
 
         match = matchRepository.save(match);
+
+        // Publier un événement pour notifier qu'un match a été enregistré
+        eventPublisher.publishEvent(new MatchRegisteredEvent(this, match));
 
         return mapToResponseDto(match);
     }
@@ -97,7 +102,24 @@ public class MatchService {
         });
     }
 
+    /**
+     * Récupérer tous les matchs entre deux dates
+     */
+    public List<MatchEntity> getMatchesBetweenDates(LocalDateTime start, LocalDateTime end) {
+//        return matchRepository.findAll().stream()
+//                .filter(match -> !match.getMatchDate().isBefore(start) && match.getMatchDate().isBefore(end))
+//                .toList();
 
+        return  matchRepository.findAllByMatchDateBetween(start, end);
+    }
+
+    /**
+     * Récupérer un match par son ID
+     */
+    public MatchEntity getMatchById(Long matchId) {
+        return matchRepository.findById(matchId)
+                .orElseThrow(() -> new RuntimeException("Match non trouvé avec l'ID: " + matchId));
+    }
 
     private MatchResponse mapToResponseDto(MatchEntity match) {
         return new MatchResponse(
