@@ -13,7 +13,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 google:
-  client-id: 1008922557590-cbshprfj91ada5dbsj4osjingigmcvvq.apps.googleusercontent.com
+  client-id: 1052967686938-82rqgdfr4cimc6nh45lgmkt1fa5umav7.apps.googleusercontent.com
 
 jwt:
   secret: votre_secret_key_minimum_256_bits_pour_hs256_algorithm
