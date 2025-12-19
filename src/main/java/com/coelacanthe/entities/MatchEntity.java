@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class MatchEntity extends BaseEntity {
     private String awayTeam;
 
     @Column(name = "match_date", nullable = false)
-    private LocalDateTime matchDate;
+    private Instant matchDate;
 
     private String competition;
 

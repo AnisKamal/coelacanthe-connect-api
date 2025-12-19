@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +106,7 @@ public class MatchService {
     /**
      * Récupérer tous les matchs entre deux dates
      */
-    public List<MatchEntity> getMatchesBetweenDates(LocalDateTime start, LocalDateTime end) {
+    public List<MatchEntity> getMatchesBetweenDates(Instant start, Instant end) {
 //        return matchRepository.findAll().stream()
 //                .filter(match -> !match.getMatchDate().isBefore(start) && match.getMatchDate().isBefore(end))
 //                .toList();

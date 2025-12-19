@@ -4,6 +4,7 @@ import com.coelacanthe.entities.MatchEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,6 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 
     List<MatchEntity> findByMatchDate(LocalDateTime matchDate);
 
-    List<MatchEntity> findAllByMatchDateBetween(LocalDateTime start, LocalDateTime end);
+    List<MatchEntity> findAllByMatchDateBetween(Instant start, Instant end);
 
 }

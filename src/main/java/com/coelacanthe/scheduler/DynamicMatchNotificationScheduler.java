@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,8 +62,12 @@ public class DynamicMatchNotificationScheduler {
      * Planifier les notifications pour tous les matchs du jour
      */
     private void scheduleNotificationsForToday() {
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        Instant startOfDay = LocalDate.now(ZoneId.of("UTC"))
+                .atStartOfDay(ZoneId.of("UTC"))
+                .toInstant();
+
+        // Fin de la journée (00:00:00 du lendemain UTC)
+        Instant endOfDay = startOfDay.plus(1, ChronoUnit.DAYS);
 
         List<MatchEntity> todayMatches = matchService.getMatchesBetweenDates(startOfDay, endOfDay);
 
@@ -82,11 +87,11 @@ public class DynamicMatchNotificationScheduler {
      * Planifier les notifications pré-match et post-match pour un match spécifique
      */
     private void scheduleNotificationsForMatch(MatchEntity match) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime matchDate = match.getMatchDate();
+        Instant now = Instant.now();
+        Instant matchDate = match.getMatchDate();
 
         // Planifier la notification pré-match (10 minutes avant)
-        LocalDateTime preNotificationTime = matchDate.minusMinutes(10);
+        Instant preNotificationTime = matchDate.minus(10, ChronoUnit.MINUTES);
         if (!match.getPreMatchNotificationSent() && preNotificationTime.isAfter(now)) {
             schedulePreMatchNotification(match, preNotificationTime);
         } else if (!match.getPreMatchNotificationSent()) {
@@ -95,7 +100,7 @@ public class DynamicMatchNotificationScheduler {
         }
 
         // Planifier la notification post-match (10 minutes après la fin estimée)
-        LocalDateTime postNotificationTime = matchDate.plusMinutes(90 + 10); // 90 min de match + 10 min
+        Instant postNotificationTime = matchDate.plus(120,ChronoUnit.MINUTES) ;
         if (!match.getPostMatchNotificationSent() && postNotificationTime.isAfter(now)) {
             schedulePostMatchNotification(match, postNotificationTime);
         } else if (!match.getPostMatchNotificationSent()) {
@@ -107,45 +112,45 @@ public class DynamicMatchNotificationScheduler {
     /**
      * Planifier une notification pré-match
      */
-    private void schedulePreMatchNotification(MatchEntity match, LocalDateTime scheduledTime) {
+    private void schedulePreMatchNotification(MatchEntity match, Instant scheduledTime) {
         String taskKey = "pre_" + match.getId();
 
         // Annuler la tâche si elle existe déjà
         cancelTask(taskKey);
 
-        Instant instant = scheduledTime.atZone(ZoneId.systemDefault()).toInstant();
+        //Instant instant = scheduledTime.atZone(ZoneId.systemDefault()).toInstant();
 
         ScheduledFuture<?> scheduledTask = taskScheduler.schedule(
             () -> sendPreMatchNotification(match),
-            instant
+                scheduledTime
         );
 
         scheduledTasks.put(taskKey, scheduledTask);
 
         log.info("Notification pré-match planifiée pour {} vs {} à {}",
-                match.getHomeTeam(), match.getAwayTeam(), scheduledTime.format(TIME_FORMATTER));
+                match.getHomeTeam(), match.getAwayTeam(), scheduledTime.atZone(ZoneId.of("UTC")).format(TIME_FORMATTER));
     }
 
     /**
      * Planifier une notification post-match
      */
-    private void schedulePostMatchNotification(MatchEntity match, LocalDateTime scheduledTime) {
+    private void schedulePostMatchNotification(MatchEntity match, Instant scheduledTime) {
         String taskKey = "post_" + match.getId();
 
         // Annuler la tâche si elle existe déjà
         cancelTask(taskKey);
 
-        Instant instant = scheduledTime.atZone(ZoneId.systemDefault()).toInstant();
+       // Instant instant = scheduledTime.atZone(ZoneId.systemDefault()).toInstant();
 
         ScheduledFuture<?> scheduledTask = taskScheduler.schedule(
             () -> sendPostMatchNotification(match),
-            instant
+                scheduledTime
         );
 
         scheduledTasks.put(taskKey, scheduledTask);
 
         log.info("Notification post-match planifiée pour {} vs {} à {}",
-                match.getHomeTeam(), match.getAwayTeam(), scheduledTime.format(TIME_FORMATTER));
+                match.getHomeTeam(), match.getAwayTeam(), scheduledTime.atZone(ZoneId.of("UTC")).format(TIME_FORMATTER));
     }
 
     /**
@@ -163,10 +168,9 @@ public class DynamicMatchNotificationScheduler {
             }
 
             String title = "Match imminent !";
-            String body = String.format("%s vs %s commence dans 10 minutes ! (%s)",
+            String body = String.format("%s vs %s commence dans 10 minutes ! ",
                     freshMatch.getHomeTeam(),
-                    freshMatch.getAwayTeam(),
-                    freshMatch.getMatchDate().format(TIME_FORMATTER));
+                    freshMatch.getAwayTeam());
 
             Map<String, String> data = new HashMap<>();
             data.put("match_id", freshMatch.getId().toString());
@@ -220,7 +224,7 @@ public class DynamicMatchNotificationScheduler {
             // Marquer comme envoyée
             matchService.markPostNotificationSent(freshMatch.getId());
 
-            log.info("✓ Notification post-match envoyée pour: {} vs {}",
+            log.info("Notification post-match envoyée pour: {} vs {}",
                     freshMatch.getHomeTeam(), freshMatch.getAwayTeam());
 
             // Retirer de la liste des tâches planifiées
