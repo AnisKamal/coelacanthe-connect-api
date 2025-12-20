@@ -31,7 +31,7 @@ public class MatchService {
         log.info("Enregistrement du match: {} vs {}", matchRequest.homeTeam(), matchRequest.awayTeam());
 
         if(matchRequest.externalId() != null){
-            Optional<MatchEntity> existingMatch = matchRepository.findByExternalMatchId(matchRequest.externalId());
+            Optional<MatchEntity> existingMatch = matchRepository.findFirstByExternalMatchId(matchRequest.externalId());
 
             if (existingMatch.isPresent()) {
                 match = existingMatch.get();

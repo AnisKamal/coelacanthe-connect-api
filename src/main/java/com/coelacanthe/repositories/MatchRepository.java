@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 
-    Optional<MatchEntity>  findByExternalMatchId(String externalMatchId);
+    Optional<MatchEntity>  findFirstByExternalMatchId(String externalMatchId);
 
     List<MatchEntity> findAllByMatchDateBetweenAndPreMatchNotificationSentIsFalse(LocalDateTime start, LocalDateTime end);
 
