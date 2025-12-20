@@ -8,6 +8,7 @@ import com.coelacanthe.services.LieuMatchDiffusionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class LieuMatchDiffusionController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LieuMatchDiffusionResponse> saveMatchDiffusion(@RequestBody LieuMatchDiffusionRequest lieuMatchDiffusionRequest){
         LieuMatchDiffusionResponse response = lieuMatchDiffusionService.saveLieuMatchDiffusion(lieuMatchDiffusionRequest) ;
         return ResponseEntity.ok(response);
