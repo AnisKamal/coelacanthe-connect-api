@@ -35,7 +35,8 @@ public class MatchService {
 
             if (existingMatch.isPresent()) {
                 match = existingMatch.get();
-                log.info("Match existant trouvé, mise à jour");
+                log.info("Match existant trouvé");
+                return mapToResponseDto(match);
             } else {
                 match = new MatchEntity();
                 log.info("Nouveau match créé");
