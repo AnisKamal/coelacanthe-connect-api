@@ -17,7 +17,7 @@ google:
 
 jwt:
   secret: votre_secret_key_minimum_256_bits_pour_hs256_algorithm
-  expiration: 86400000 # 24 heures en millisecondes
+  expiration: 31536000000  # expire dans une année
 
 #logging:
 #  pattern: 
